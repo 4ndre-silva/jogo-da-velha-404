@@ -133,14 +133,33 @@ function startNewRound() {
 function aiMove() {
   if (!gameActive || currentPlayer !== aiSymbol) return;
   
+  // Chance de fazer uma jogada aleatória (30% de chance)
+  if (Math.random() < 0.3) {
+    const emptySpots = board.reduce((acc, cell, index) => {
+      if (cell === "") acc.push(index);
+      return acc;
+    }, []);
+    
+    if (emptySpots.length > 0) {
+      const randomIndex = Math.floor(Math.random() * emptySpots.length);
+      makeMove(emptySpots[randomIndex], aiSymbol);
+      return;
+    }
+  }
+
   let bestScore = -Infinity;
   let bestMove = 0;
+  let possibleMoves = [];
 
+  // Coleta todas as jogadas possíveis com suas pontuações
   for (let i = 0; i < 9; i++) {
     if (board[i] === "") {
       board[i] = aiSymbol;
-      let score = minimax(board, 0, false);
+      let score = minimax(board, 0, false, 3); // Limitando a profundidade para 3
       board[i] = "";
+      
+      // Armazena a jogada e sua pontuação
+      possibleMoves.push({ index: i, score: score });
       if (score > bestScore) {
         bestScore = score;
         bestMove = i;
@@ -148,10 +167,22 @@ function aiMove() {
     }
   }
 
-  makeMove(bestMove, aiSymbol);
+  // Filtra movimentos que têm pontuação próxima da melhor
+  const goodMoves = possibleMoves.filter(move => 
+    move.score >= bestScore - 2
+  );
+
+  // Escolhe aleatoriamente entre os bons movimentos
+  const selectedMove = goodMoves[Math.floor(Math.random() * goodMoves.length)];
+  makeMove(selectedMove.index, aiSymbol);
 }
 
-function minimax(board, depth, isMaximizing) {
+function minimax(board, depth, isMaximizing, maxDepth) {
+  // Limita a profundidade de análise
+  if (depth >= maxDepth) {
+    return 0;
+  }
+
   if (checkWinner(aiSymbol)) return 10 - depth;
   if (checkWinner(playerSymbol)) return depth - 10;
   if (!board.includes("")) return 0;
@@ -161,7 +192,7 @@ function minimax(board, depth, isMaximizing) {
     for (let i = 0; i < 9; i++) {
       if (board[i] === "") {
         board[i] = aiSymbol;
-        let score = minimax(board, depth + 1, false);
+        let score = minimax(board, depth + 1, false, maxDepth);
         board[i] = "";
         bestScore = Math.max(score, bestScore);
       }
@@ -172,7 +203,7 @@ function minimax(board, depth, isMaximizing) {
     for (let i = 0; i < 9; i++) {
       if (board[i] === "") {
         board[i] = playerSymbol;
-        let score = minimax(board, depth + 1, true);
+        let score = minimax(board, depth + 1, true, maxDepth);
         board[i] = "";
         bestScore = Math.min(score, bestScore);
       }
