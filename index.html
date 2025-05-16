@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogo da Velha Neon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Jogo da Velha Neon</h1>
+  <div class="game-options">
+    <div class="mode-select">
+      <label>
+        <input type="radio" name="mode" value="multiplayer" checked /> Multiplayer
+      </label>
+      <label>
+        <input type="radio" name="mode" value="solo" /> Solo vs IA
+      </label>
+    </div>
+    <div class="symbol-select">
+      <p>Escolha seu símbolo:</p>
+      <label>
+        <input type="radio" name="symbol" value="X" checked /> X
+      </label>
+      <label>
+        <input type="radio" name="symbol" value="O" /> O
+      </label>
+    </div>
+  </div>
+  <div class="board" id="board">
+    <div class="cell" data-index="0"></div>
+    <div class="cell" data-index="1"></div>
+    <div class="cell" data-index="2"></div>
+    <div class="cell" data-index="3"></div>
+    <div class="cell" data-index="4"></div>
+    <div class="cell" data-index="5"></div>
+    <div class="cell" data-index="6"></div>
+    <div class="cell" data-index="7"></div>
+    <div class="cell" data-index="8"></div>
+  </div>
+  <p class="status" id="status"></p>
+  <p class="score">X: <span id="scoreX">0</span> | O: <span id="scoreO">0</span></p>
+  <div class="win-message" id="winnerMessage"></div>
+  <button onclick="restartGame()">Reiniciar</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
